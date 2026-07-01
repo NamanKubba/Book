@@ -7,7 +7,7 @@ dotenv.config();
 
 const app = express();
 const port = process.env.OTP_PORT || 4000;
-const emailUser = process.env.OTP_EMAIL_USER || "namankubba67@gmail.com";
+const emailUser = process.env.OTP_EMAIL_USER;
 const emailAppPassword = process.env.OTP_EMAIL_APP_PASSWORD;
 const allowedOrigin = process.env.OTP_ALLOWED_ORIGIN || "http://localhost:3000";
 const otpStore = new Map();
@@ -26,6 +26,10 @@ function createOtp() {
 function getTransporter() {
   if (!emailAppPassword) {
     throw new Error("Missing OTP_EMAIL_APP_PASSWORD in .env");
+  }
+
+  if (!emailUser) {
+    throw new Error("Missing OTP_EMAIL_USER in .env");
   }
 
   return nodemailer.createTransport({

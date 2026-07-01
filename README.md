@@ -53,7 +53,7 @@ OTP email sending is handled by a small local Express server in `server/otp-serv
 Create a `.env` file in the project root:
 
 ```env
-OTP_EMAIL_USER=namankubba67@gmail.com
+OTP_EMAIL_USER=your_gmail_address@gmail.com
 OTP_EMAIL_APP_PASSWORD=your_gmail_app_password_here
 OTP_PORT=4000
 OTP_ALLOWED_ORIGIN=http://localhost:3000
