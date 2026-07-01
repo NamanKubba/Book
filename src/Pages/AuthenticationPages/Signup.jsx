@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../../config/api'
 import React, { useState } from "react"
 import "./UserAuth.css"
 import { Link, useNavigate } from "react-router-dom"
@@ -99,7 +100,7 @@ function Signup()
             }
 
             const res = await axios.post(
-                "https://bookztron-server.vercel.app/api/signup",
+                `${API_BASE_URL}/api/signup`,
             {
                 newUserName: `${newUserName}`,
                 newUserEmail: `${newUserEmail.trim()}`,
@@ -283,3 +284,6 @@ function Signup()
 }
 
 export { Signup }
+
+
+

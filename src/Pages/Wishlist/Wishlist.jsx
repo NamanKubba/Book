@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../../config/api'
 import React, { useEffect } from "react"
 import jwt_decode from "jwt-decode";
 import axios from "axios"
@@ -22,7 +23,7 @@ function Wishlist() {
             } else {
                 (async function getUpdatedWishlistAndCart() {
                     let updatedUserInfo = await axios.get(
-                        "https://bookztron-server.vercel.app/api/user",
+                        `${API_BASE_URL}/api/user`,
                         {
                             headers: {
                                 'x-access-token': localStorage.getItem('token'),
@@ -82,3 +83,6 @@ function Wishlist() {
 }
 
 export { Wishlist }
+
+
+

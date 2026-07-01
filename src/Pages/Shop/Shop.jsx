@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../../config/api'
 import React, { useState, useEffect } from 'react'
 import jwt_decode from "jwt-decode"
 import { useLocation } from "react-router-dom"
@@ -55,7 +56,7 @@ function Shop(props) {
         //Redo api call to get data
         try {
           (async () => {
-            const productsAvailableData = await axios.get('https://bookztron-server.vercel.app/api/home/products')
+            const productsAvailableData = await axios.get(`${API_BASE_URL}/api/home/products`)
             dispatchSortedProductsList({type:"ADD_ITEMS_TO_PRODUCTS_AVAILABLE_LIST", payload: [...productsAvailableData.data.productsList] })
           }) ()
         }
@@ -80,7 +81,7 @@ function Shop(props) {
           (async function getUpdatedWishlistAndCart()
           {
             let updatedUserInfo = await axios.get(
-            "https://bookztron-server.vercel.app/api/user",
+            `${API_BASE_URL}/api/user`,
             {
               headers:
               {
@@ -158,3 +159,6 @@ function Shop(props) {
 }
 
 export { Shop }
+
+
+

@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../../config/api'
 import "./Orders.css"
 import { useEffect } from "react";
 import jwt_decode from "jwt-decode"
@@ -48,7 +49,7 @@ function Orders()
                     (async function getUpdatedWishlistAndCart()
                     {
                         let updatedUserInfo = await axios.get(
-                        "https://bookztron-server.vercel.app/api/user",
+                        `${API_BASE_URL}/api/user`,
                         {
                             headers:
                             {
@@ -112,3 +113,5 @@ function Orders()
 }
 
 export { Orders }
+
+

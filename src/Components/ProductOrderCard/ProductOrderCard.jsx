@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../../config/api'
 import "./ProductOrderCard.css"
 import axios from "axios";
 import { useOrders } from "../../index"
@@ -19,7 +20,7 @@ function ProductOrderCard({productDetails})
 
     const removeItemFromOrders = async () => {
         let updatedUserInfo = await axios.patch(
-            `https://bookztron-server.vercel.app/api/orders/${_id}`,
+            `${API_BASE_URL}/api/orders/${_id}`,
             {
                 orderId
             },
@@ -67,3 +68,6 @@ function ProductOrderCard({productDetails})
 }
 
 export { ProductOrderCard }
+
+
+

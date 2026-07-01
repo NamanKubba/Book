@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../../config/api'
 import "./HorizontalProductCard.css"
 import { useState } from "react"
 import axios from "axios";
@@ -44,7 +45,7 @@ function HorizontalProductCard({productDetails})
             
             let newQuantity = productQuantity
             let quantityUpdateResponse = await axios.patch(
-                `https://bookztron-server.vercel.app/api/cart/${_id}`,
+                `${API_BASE_URL}/api/cart/${_id}`,
                 {
                     newQuantity
                 },
@@ -85,7 +86,7 @@ function HorizontalProductCard({productDetails})
             else
             {
                 let cartUpdateResponse = await axios.delete(
-                    `https://bookztron-server.vercel.app/api/cart/${productDetails._id}`,
+                    `${API_BASE_URL}/api/cart/${productDetails._id}`,
                     {
                         headers:
                         {
@@ -127,7 +128,7 @@ function HorizontalProductCard({productDetails})
             else
             {
                 const wishlistUpdateResponse = await axios.patch(
-                    "https://bookztron-server.vercel.app/api/wishlist",
+                    `${API_BASE_URL}/api/wishlist`,
                     {
                         productdetails
                     },
@@ -209,3 +210,6 @@ function HorizontalProductCard({productDetails})
 }
 
 export { HorizontalProductCard }
+
+
+

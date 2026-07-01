@@ -1,3 +1,4 @@
+import { API_BASE_URL, RAZORPAY_IMAGE_URL } from '../../config/api'
 import "./ShoppingBill.css"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
@@ -50,7 +51,7 @@ function ShoppingBill()
         let finalBillAmount = (finalBill*100).toString()
 
         const dataResponse = await axios.post(
-            "https://bookztron-server.vercel.app/api/razorpay",
+            `${API_BASE_URL}/api/razorpay`,
             {
                 finalBillAmount
             }
@@ -64,7 +65,7 @@ function ShoppingBill()
             "currency": data.currency,
             "name": "BookStack",
             "description": "Thank you for shopping!",
-            "image": "https://raw.githubusercontent.com/Naman-Saxena1/Bookztron-E-Commerce_Book_Store/development/public/favicon-icon.png",
+            "image": RAZORPAY_IMAGE_URL,
             "order_id": data.id,
             "handler": async function (response){
                 showToast("success","","Payment Successful! 😎")
@@ -73,7 +74,7 @@ function ShoppingBill()
                     return {...orderItem, orderId: data.id}
                 })
                 let ordersUpdatedResponse = await axios.post(
-                    "https://bookztron-server.vercel.app/api/orders",
+                    `${API_BASE_URL}/api/orders`,
                     {
                         newOrderItemsArray
                     },
@@ -82,7 +83,7 @@ function ShoppingBill()
                     }
                 )
                 let emptyCartResponse = await axios.patch(
-                    "https://bookztron-server.vercel.app/api/cart/empty/all",
+                    `${API_BASE_URL}/api/cart/empty/all`,
                     {},
                     {
                         headers : {'x-access-token': localStorage.getItem('token')}
@@ -180,3 +181,7 @@ function ShoppingBill()
 }
 
 export { ShoppingBill }
+
+
+
+

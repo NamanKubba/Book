@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../../config/api'
 import React, { useEffect } from 'react'
 import { Link } from "react-router-dom"
 import axios from "axios"
@@ -47,7 +48,7 @@ function Home() {
       else {
         (async function getUpdatedWishlistAndCart() {
           let updatedUserInfo = await axios.get(
-            "https://bookztron-server.vercel.app/api/user",
+            `${API_BASE_URL}/api/user`,
             {
               headers:
               {
@@ -202,3 +203,6 @@ function Home() {
 }
 
 export { Home };
+
+
+

@@ -34,6 +34,8 @@
 html, body {
     margin: 0;
     padding: 0;
+    width: 100%;
+    overflow-x: hidden;
     font-family: var(--font-sans);
     background-color: var(--background);
     color: var(--text-primary);
@@ -43,6 +45,12 @@ html, body {
 
 * {
     box-sizing: border-box;
+}
+
+img,
+input,
+button {
+    max-width: 100%;
 }
 
 button,

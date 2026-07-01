@@ -1,6 +1,7 @@
 .shop-page {
     min-height: 100vh;
     padding: 2rem 0 4rem;
+    overflow-x: hidden;
 }
 
 .shop-layout {
@@ -64,6 +65,7 @@
 
     .shop-layout {
         grid-template-columns: 1fr;
+        min-width: 0;
     }
 
     .shop-sidebar {

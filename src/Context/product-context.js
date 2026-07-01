@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../config/api'
 import { useEffect, useReducer, useContext, createContext} from 'react'
 import axios from 'axios'
 
@@ -277,7 +278,7 @@ let ProductsProvider = ({children}) =>
     useEffect(() => {
       try {
         (async () => {
-            const productsAvailableData = await axios.get('https://bookztron-server.vercel.app/api/home/products')
+            const productsAvailableData = await axios.get(`${API_BASE_URL}/api/home/products`)
             productList = [...productsAvailableData.data.productsList]
         }) ()
       }
@@ -296,3 +297,5 @@ let ProductsProvider = ({children}) =>
 let useProductAvailable = () => useContext(ProductsContext)
 
 export { ProductsProvider, useProductAvailable}
+
+

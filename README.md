@@ -103,10 +103,10 @@ Runs the test runner.
 
 ## Backend API
 
-The app currently uses the deployed backend:
+The app reads the backend URL from:
 
-```text
-https://bookztron-server.vercel.app
+```env
+REACT_APP_API_BASE_URL=https://bookstack-server.vercel.app
 ```
 
 Most API flows are working:

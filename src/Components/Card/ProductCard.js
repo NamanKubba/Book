@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../../config/api'
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
@@ -63,7 +64,7 @@ export default function ProductCard({ productdetails }) {
         if (!isWishlisted) {
             // Add to wishlist
             let response = await axios.patch(
-                "https://bookztron-server.vercel.app/api/wishlist",
+                `${API_BASE_URL}/api/wishlist`,
                 { productdetails },
                 { headers: { 'x-access-token': token } }
             )
@@ -75,7 +76,7 @@ export default function ProductCard({ productdetails }) {
         } else {
             // Remove from wishlist
             let response = await axios.delete(
-                `https://bookztron-server.vercel.app/api/wishlist/${_id}`,
+                `${API_BASE_URL}/api/wishlist/${_id}`,
                 { headers: { 'x-access-token': token } }
             )
             if (response.data.status === "ok") {
@@ -158,3 +159,6 @@ export default function ProductCard({ productdetails }) {
 }
 
 export { ProductCard };
+
+
+

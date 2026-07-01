@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../../config/api'
 import { useEffect, useState } from "react";
 import "./ProductPage.css"
 import axios from "axios";
@@ -46,7 +47,7 @@ function ProductPage()
                 (async function getUpdatedWishlistAndCart()
                 {
                     let updatedUserInfo = await axios.get(
-                    "https://bookztron-server.vercel.app/api/user",
+                    `${API_BASE_URL}/api/user`,
                     {
                         headers:
                         {
@@ -83,7 +84,7 @@ function ProductPage()
             else
             {
                 let wishlistUpdateResponse = await axios.patch(
-                    "https://bookztron-server.vercel.app/api/wishlist",
+                    `${API_BASE_URL}/api/wishlist`,
                     {
                         productdetails
                     },
@@ -128,7 +129,7 @@ function ProductPage()
             else
             {
                 let cartUpdateResponse = await axios.patch(
-                    "https://bookztron-server.vercel.app/api/cart",
+                    `${API_BASE_URL}/api/cart`,
                     {
                         productdetails
                     },
@@ -206,3 +207,6 @@ function ProductPage()
 }
 
 export { ProductPage }
+
+
+

@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../../config/api'
 import React, { useState, useEffect } from "react"
 import jwt_decode from "jwt-decode"
 import "./UserAuth.css"
@@ -40,7 +41,7 @@ function Login()
                 (async function getUpdatedWishlistAndCart()
                 {
                     let updatedUserInfo = await axios.get(
-                    "https://bookztron-server.vercel.app/api/user",
+                    `${API_BASE_URL}/api/user`,
                     {
                         headers:
                         {
@@ -76,7 +77,7 @@ function Login()
         try
         {
             const res = await axios.post(
-                "https://bookztron-server.vercel.app/api/login",
+                `${API_BASE_URL}/api/login`,
                 {
                     userEmail: userEmail.trim(),
                     userPassword
@@ -217,3 +218,6 @@ function Login()
 }
 
 export { Login }
+
+
+
