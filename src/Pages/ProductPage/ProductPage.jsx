@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./ProductPage.css"
 import axios from "axios";
 import jwt_decode from "jwt-decode";
@@ -13,11 +13,12 @@ function ProductPage()
     const { dispatchUserWishlist } = useWishlist()
     const { dispatchUserCart }     = useCart()
     const { showToast } = useToast()
+    const [wishlistAnimating, setWishlistAnimating] = useState(false)
+    const [cartAnimating, setCartAnimating] = useState(false)
     const { id } = useParams()
     const productDetailsOnStorage = localStorage.getItem(`${id}`)
     const productdetails = JSON.parse(productDetailsOnStorage)
     const {
-        _id,
         bookName,
         author,
         originalPrice,
@@ -25,7 +26,6 @@ function ProductPage()
         discountPercent,
         imgSrc, 
         imgAlt,
-        badgeText, 
         outOfStock,
         rating, 
         description
@@ -66,6 +66,8 @@ function ProductPage()
 
     async function addItemToWishlist()
     {
+        setWishlistAnimating(true)
+        window.setTimeout(() => setWishlistAnimating(false), 560)
         const token=localStorage.getItem('token')
 
         if(token)
@@ -102,12 +104,15 @@ function ProductPage()
         }
         else
         {
-            showToast("warning","","Kindly Login")
+            dispatchUserWishlist({type: "ADD_GUEST_WISHLIST_ITEM", payload: productdetails})
+            showToast("success","","Saved to wishlist")
         } 
     }
 
     async function addItemToCart()
     {
+        setCartAnimating(true)
+        window.setTimeout(() => setCartAnimating(false), 560)
         const token=localStorage.getItem('token')
 
         if(token)
@@ -143,7 +148,8 @@ function ProductPage()
         }
         else
         {
-            showToast("warning","","Kindly Login")
+            dispatchUserCart({type: "ADD_GUEST_CART_ITEM", payload: productdetails})
+            showToast("success","","Added to cart")
         } 
     }
 
@@ -179,14 +185,14 @@ function ProductPage()
                                         event.preventDefault();
                                         addItemToWishlist()
                                     }}  
-                                    className="solid-primary-btn">
+                                    className={`solid-primary-btn action-pop ${wishlistAnimating ? "is-animating" : ""}`}>
                                         Add to wishlist
                                 </button>
                                 <button 
                                     onClick={()=>{
                                         addItemToCart()
                                     }}
-                                    className="solid-warning-btn">
+                                    className={`solid-warning-btn action-pop ${cartAnimating ? "is-animating" : ""}`}>
                                         Add to cart
                                 </button>
                             </div>

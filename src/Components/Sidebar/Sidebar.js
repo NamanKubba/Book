@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import './Sidebar.css'
 import { useProductAvailable } from "../../Context/product-context"
 import { useGenre } from "../../Context/genre-context";
+import { SlidersHorizontal } from "lucide-react"
+import "./Sidebar.css"
 
 function Sidebar() {
   const {
-  productsAvailableList,
   dispatchSortedProductsList,
   productFilterOptions,
   dispatchProductFilterOptions
@@ -63,73 +63,37 @@ function Sidebar() {
   }
 
   return (
-    <aside className="product-page-sidebar">
-      <div className="filter-clear-options">
-        <p className="sidebar-filter-option">Filters</p>
-        <p onClick={clearFilters}className="sidebar-clear-option text-underline">Clear</p>
+    <aside className="filter-panel">
+      <div className="filter-panel-header">
+        <div className="filter-panel-title">
+          <SlidersHorizontal size={18} />
+          <span>Filters</span>
+        </div>
+        <button 
+          onClick={clearFilters}
+          className="filter-clear-btn"
+        >
+          Clear All
+        </button>
       </div>
 
-      <div className="price-slider">
-        <p>Price</p>
-
-        <div className="price-input">
-          <div className="field">
-            <span>Min</span>
-            <input
-              onChange={(e) => {
-                setMinPriceRange(e.target.value); 
-                if(maxPriceRange-e.target.value>100)
-                {
-                  dispatchProductFilterOptions({type:"UPDATE_MIN_PRICE_RANGE_FILTER",minPrice:e.target.value})
-                }
-              }}
-              type="number"
-              className="input-min"
-              value={minPriceRange}
-              max="10000"
-            />
-          </div>
-          <div className="separator">-</div>
-          <div className="field">
-            <span>Max</span>
-            <input
-              onChange={(e) => {
-                setMaxPriceRange(e.target.value);
-                if(e.target.value-minPriceRange>100)
-                {
-                  setMaxPriceRange(e.target.value); 
-                  dispatchProductFilterOptions({type:"UPDATE_MAX_PRICE_RANGE_FILTER",maxPrice:e.target.value})
-                }
-              }}
-              type="number"
-              className="input-max"
-              value={maxPriceRange}
-              max="10000"
-            />
-          </div>
+      <div className="filter-group">
+        <span className="filter-label">Price Range</span>
+        <div className="price-range-labels">
+          <span>Rs. {minPriceRange}</span>
+          <span>Rs. {maxPriceRange}</span>
         </div>
-
-        <div className="slider">
-          <div
-            className="progress"
-            style={{
-              left: (minPriceRange / 1200) * 100 + "%",
-              right: 100 - (maxPriceRange / 1200) * 100 + "%",
-            }}
-          ></div>
-        </div>
-
-        <div className="range-input">
+        <div className="range-stack">
           <input
             onChange={(e) => {
               if(maxPriceRange-e.target.value>100)
               {
-                setMinPriceRange(e.target.value); 
-                dispatchProductFilterOptions({type:"UPDATE_MIN_PRICE_RANGE_FILTER",minPrice:e.target.value})
+                setMinPriceRange(Number(e.target.value)); 
+                dispatchProductFilterOptions({type:"UPDATE_MIN_PRICE_RANGE_FILTER",minPrice:Number(e.target.value)})
               }
             }}
             type="range"
-            className="range-min"
+            className="filter-range"
             min="0"
             max="1200"
             value={minPriceRange}
@@ -139,12 +103,12 @@ function Sidebar() {
             onChange={(e) => {
               if(e.target.value-minPriceRange>100)
               {
-                setMaxPriceRange(e.target.value); 
-                dispatchProductFilterOptions({type:"UPDATE_MAX_PRICE_RANGE_FILTER",maxPrice:e.target.value})
+                setMaxPriceRange(Number(e.target.value)); 
+                dispatchProductFilterOptions({type:"UPDATE_MAX_PRICE_RANGE_FILTER",maxPrice:Number(e.target.value)})
               }
             }}
             type="range"
-            className="range-max"
+            className="filter-range"
             min="0"
             max="1200"
             value={maxPriceRange}
@@ -153,106 +117,47 @@ function Sidebar() {
         </div>
       </div>
 
-      <div className="product-category">
-        <p>Category</p>
-        <div className="checkbox-item">
-          <input
-            onChange={() =>{ setFictionCategoryCheckbox(prevState=>!prevState); dispatchProductFilterOptions({type:"UPDATE_FICTION_FILTER"}) }}
-            id="fiction-checkbox"
-            type="checkbox"
-            checked={fictionCategoryCheckbox}
-          />
-          <label htmlFor="fiction-checkbox">Fiction</label>
-        </div>
-
-        <div className="checkbox-item">
-          <input
-            onChange={() => {setThrillerCategoryCheckbox(prevState=>!prevState); dispatchProductFilterOptions({type:"UPDATE_THRILLER_FILTER"}) } }
-            id="thriller-checkbox"
-            type="checkbox"
-            checked={thrillerCategoryCheckbox}
-          />
-          <label htmlFor="thriller-checkbox">Thriller</label>
-        </div>
-
-        <div className="checkbox-item">
-          <input
-            onChange={() => {setTechCategoryCheckbox(prevState=>!prevState); dispatchProductFilterOptions({type:"UPDATE_TECH_FILTER"}) } }
-            id="tech-checkbox"
-            type="checkbox"
-            checked={techCategoryCheckbox}
-          />
-          <label htmlFor="tech-checkbox">Tech</label>
-        </div>
-
-        <div className="checkbox-item">
-          <input
-            onChange={() => {setPhilosophyCategoryCheckbox(prevState=>!prevState); dispatchProductFilterOptions({type:"UPDATE_PHILOSOPHY_FILTER"}) }}
-            id="philosophy-checkbox"
-            type="checkbox"
-            checked={philosophyCategoryCheckbox}
-          />
-          <label htmlFor="philosophy-checkbox">Philosophy</label>
-        </div>
-
-        <div className="checkbox-item">
-          <input
-            onChange={() => {setRomanceCategoryCheckbox(prevState=>!prevState); dispatchProductFilterOptions({type:"UPDATE_ROMANCE_FILTER"}) } }
-            id="romance-checkbox"
-            type="checkbox"
-            checked={romanceCategoryCheckbox}
-          />
-          <label htmlFor="romance-checkbox">Romance</label>
-        </div>
-
-        <div className="checkbox-item">
-          <input
-            onChange={() => {setMangaCategoryCheckbox(prevState=>!prevState); dispatchProductFilterOptions({type:"UPDATE_MANGA_FILTER"}) } }
-            id="manga-checkbox"
-            type="checkbox"
-            checked={mangaCategoryCheckbox}
-          />
-          <label htmlFor="manga-checkbox">Manga</label>
-        </div>
+      <div className="filter-group separated">
+        <span className="filter-label">Categories</span>
+        {[
+          { id: 'fiction-checkbox', label: 'Fiction', checked: fictionCategoryCheckbox, setter: setFictionCategoryCheckbox, actionType: 'UPDATE_FICTION_FILTER' },
+          { id: 'thriller-checkbox', label: 'Thriller', checked: thrillerCategoryCheckbox, setter: setThrillerCategoryCheckbox, actionType: 'UPDATE_THRILLER_FILTER' },
+          { id: 'tech-checkbox', label: 'Tech', checked: techCategoryCheckbox, setter: setTechCategoryCheckbox, actionType: 'UPDATE_TECH_FILTER' },
+          { id: 'philosophy-checkbox', label: 'Philosophy', checked: philosophyCategoryCheckbox, setter: setPhilosophyCategoryCheckbox, actionType: 'UPDATE_PHILOSOPHY_FILTER' },
+          { id: 'romance-checkbox', label: 'Romance', checked: romanceCategoryCheckbox, setter: setRomanceCategoryCheckbox, actionType: 'UPDATE_ROMANCE_FILTER' },
+          { id: 'manga-checkbox', label: 'Manga', checked: mangaCategoryCheckbox, setter: setMangaCategoryCheckbox, actionType: 'UPDATE_MANGA_FILTER' },
+        ].map(cat => (
+          <label key={cat.id} className="filter-choice">
+            <input
+              onChange={() => { cat.setter(prev => !prev); dispatchProductFilterOptions({type: cat.actionType}) }}
+              id={cat.id}
+              type="checkbox"
+              checked={cat.checked}
+            />
+            <span>{cat.label}</span>
+          </label>
+        ))}
       </div>
 
-      <div className="product-page-rating-radio">
-        <p>Rating</p>
-
-        <div className="rating-items">
-          <input
-            onChange={() => dispatchProductFilterOptions({type:"UPDATE_MINIMUM_RATING_FILTER",minRating : 4})   }
-            type="radio"
-            id="4-stars-or-above"
-            name="rating"
-            value="4-stars-or-above"
-          />
-          <label htmlFor="4-stars-or-above">4 stars or above</label>
-        </div>
-
-        <div className="rating-items">
-          <input
-            onChange={() => dispatchProductFilterOptions({type:"UPDATE_MINIMUM_RATING_FILTER",minRating : 3})   }
-            type="radio"
-            id="3-stars-or-above"
-            name="rating"
-            value="3-stars-or-above"
-          />
-          <label htmlFor="3-stars-or-above">3 stars or above</label>
-        </div>
-
-        <div className="rating-items">
-          <input
-            onChange={() => dispatchProductFilterOptions({type:"UPDATE_MINIMUM_RATING_FILTER",minRating : 2})   }
-            type="radio"
-            id="2-stars-or-above"
-            name="rating"
-            value="2-stars-or-above"
-          />
-          <label htmlFor="2-stars-or-above">2 stars or above</label>
-        </div>
-
-        <div className="rating-items">
+      <div className="filter-group separated">
+        <span className="filter-label">Minimum Rating</span>
+        {[
+          { id: '4-stars-or-above', label: '4 stars & above', val: 4 },
+          { id: '3-stars-or-above', label: '3 stars & above', val: 3 },
+          { id: '2-stars-or-above', label: '2 stars & above', val: 2 },
+        ].map(rate => (
+          <label key={rate.id} className="filter-choice">
+            <input
+              onChange={() => dispatchProductFilterOptions({type:"UPDATE_MINIMUM_RATING_FILTER",minRating : rate.val})   }
+              type="radio"
+              id={rate.id}
+              name="rating"
+              value={rate.id}
+            />
+            <span>{rate.label}</span>
+          </label>
+        ))}
+        <label className="filter-choice">
           <input
             onChange={() => dispatchProductFilterOptions({type:"UPDATE_MINIMUM_RATING_FILTER",minRating : 1})   }
             type="radio"
@@ -262,14 +167,13 @@ function Sidebar() {
             defaultChecked
             ref={ratingRadioBtnRef}
           />
-          <label htmlFor="1-stars-or-above">1 stars or above</label>
-        </div>
+          <span>Show All Ratings</span>
+        </label>
       </div>
 
-      <div className="product-page-sortby-radio">
-        <p>Sort By</p>
-
-        <div className="sortby-items">
+      <div className="filter-group separated">
+        <span className="filter-label">Sort By</span>
+        <label className="filter-choice">
           <input
             onChange={() => { setSortPriceLowToHigh(true); setSortPriceHighToLow(false); dispatchSortedProductsList({type:"PRICE_LOW_TO_HIGH"}) } }
             type="radio"
@@ -278,10 +182,9 @@ function Sidebar() {
             value="price-low-to-high"
             checked={sortPriceLowToHigh}
           />
-          <label htmlFor="price-low-to-high">Price - Low to High</label>
-        </div>
-
-        <div className="sortby-items">
+          <span>Price: Low to High</span>
+        </label>
+        <label className="filter-choice">
           <input
             onChange={() => { setSortPriceLowToHigh(false); setSortPriceHighToLow(true); dispatchSortedProductsList({type:"PRICE_HIGH_TO_LOW"}) } }
             type="radio"
@@ -290,14 +193,13 @@ function Sidebar() {
             value="price-high-to-low"
             checked={sortPriceHighToLow}
           />
-          <label htmlFor="price-high-to-low">Price - High to Low</label>
-        </div>
+          <span>Price: High to Low</span>
+        </label>
       </div>
 
-      <div className="additional-filters">
-        <p>Additional filters</p>
-
-        <div>
+      <div className="filter-group separated">
+        <span className="filter-label">Preferences</span>
+        <label className="filter-choice">
           <input
             id="out-of-stock-checkbox"
             value=""
@@ -305,12 +207,9 @@ function Sidebar() {
             type="checkbox"
             checked={includeOutOfStockCheckbox}
           />
-          <label htmlFor="out-of-stock-checkbox">
-            Include out of stock products
-          </label>
-        </div>
-
-        <div>
+          <span>Include Out of Stock</span>
+        </label>
+        <label className="filter-choice">
           <input
             id="fast-delivery-available-checkbox"
             value=""
@@ -318,10 +217,8 @@ function Sidebar() {
             type="checkbox"
             checked={fastDeliveryOnlyCheckbox}
           />
-          <label htmlFor="fast-delivery-available-checkbox">
-            Fast delivery only
-          </label>
-        </div>
+          <span>Fast Delivery Only</span>
+        </label>
       </div>
     </aside>
   );

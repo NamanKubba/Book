@@ -1,17 +1,18 @@
-import React,{ useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import jwt_decode from "jwt-decode";
-import './ProductCard.css'
+import { motion } from "framer-motion"
+import { Heart } from "lucide-react"
 import { useToast } from '../../Context/toast-context';
 import { useWishlist } from '../../Context/wishlist-context';
+import "./ProductCard.css"
 
-export default function ProductCard({ productdetails }) 
-{
+export default function ProductCard({ productdetails }) {
     const navigate = useNavigate()
-
     const { userWishlist, dispatchUserWishlist } = useWishlist()
     const { showToast } = useToast()
+    
     const {
         _id, 
         bookName,
@@ -24,158 +25,135 @@ export default function ProductCard({ productdetails })
         badgeText, 
         outOfStock
     } = productdetails
-    const [wishlistHeartIcon, setWishlistHeartIcon] = useState("fa-heart-o")
-    const [wishlistBtn, setWishlistBtn]             = useState("add-to-wishlist-btn")
 
-    useEffect(()=>{
-        const index = userWishlist.findIndex(product=> {
-            return product._id === productdetails._id
-        })
+    const [isWishlisted, setIsWishlisted] = useState(false)
+    const [wishlistAnimating, setWishlistAnimating] = useState(false)
 
-        if(index!==-1)
-        {
-            setWishlistHeartIcon("fa-heart")
-            setWishlistBtn("added-to-wishlist-btn")
-        }
-        else
-        {
-            setWishlistHeartIcon("fa-heart-o")
-            setWishlistBtn("add-to-wishlist-btn")
-        }
-    },[userWishlist, productdetails._id, setWishlistHeartIcon, setWishlistBtn])
+    useEffect(() => {
+        const index = userWishlist.findIndex(product => product._id === _id)
+        setIsWishlisted(index !== -1)
+    }, [userWishlist, _id])
 
-    async function addOrRemoveItemToWishlist()
-    {
-        if(wishlistHeartIcon==="fa-heart-o" && wishlistBtn ==="add-to-wishlist-btn")
-        {
-            //Item not present in wishlist, add it
-            const token=localStorage.getItem('token')
+    async function addOrRemoveItemToWishlist(event) {
+        event.preventDefault()
+        event.stopPropagation()
+        setWishlistAnimating(true)
+        window.setTimeout(() => setWishlistAnimating(false), 560)
 
-            if(token)
-            {
-                const user = jwt_decode(token)
-                
-                if(!user)
-                {
-                    localStorage.removeItem('token')
-                    showToast("warning","","Kindly Login")
-                    navigate('/login')
-                }
-                else
-                {
-                    let wishlistUpdateResponse = await axios.patch(
-                        "https://bookztron-server.vercel.app/api/wishlist",
-                        {
-                            productdetails
-                        },
-                        {
-                            headers:
-                            {
-                                'x-access-token': localStorage.getItem('token'),
-                            }
-                        }
-                    )
-            
-                    if(wishlistUpdateResponse.data.status==="ok")
-                    {
-                        setWishlistHeartIcon("fa-heart")
-                        setWishlistBtn("added-to-wishlist-btn")
-                        dispatchUserWishlist({type: "UPDATE_USER_WISHLIST",payload: wishlistUpdateResponse.data.user.wishlist})
-                        showToast("success","","Item successfully added to wishlist")
-                    }
-                }
+        const token = localStorage.getItem('token')
+        if (!token) {
+            if (!isWishlisted) {
+                dispatchUserWishlist({ type: "ADD_GUEST_WISHLIST_ITEM", payload: productdetails })
+                showToast("success", "", "Saved to wishlist")
+            } else {
+                dispatchUserWishlist({ type: "REMOVE_GUEST_WISHLIST_ITEM", payload: _id })
+                showToast("success", "", "Removed from wishlist")
             }
-            else
-            {
-                showToast("warning","","Kindly Login")
-            }   
+            return
         }
-        else
-        {
-            //Item present in wishlist, remove it
-            const token=localStorage.getItem('token')
 
-            if(token)
-            {
-                const user = jwt_decode(token)
-                
-                if(!user)
-                {
-                    localStorage.removeItem('token')
-                    showToast("warning","","Kindly Login")
-                    navigate('/login')
-                }
-                else
-                {
-                    let wishlistUpdateResponse = await axios.delete(
-                        `https://bookztron-server.vercel.app/api/wishlist/${productdetails._id}`,
-                        {
-                            headers:
-                            {
-                                'x-access-token': localStorage.getItem('token'),
-                            }
-                        },
-                        {
-                            productdetails
-                        }
-                    )
-                    if(wishlistUpdateResponse.data.status==="ok")
-                    {
-                        setWishlistHeartIcon("fa-heart-o")
-                        setWishlistBtn("add-to-wishlist-btn")
-                        dispatchUserWishlist({type: "UPDATE_USER_WISHLIST",payload: wishlistUpdateResponse.data.user.wishlist})
-                        showToast("success","","Item successfully deleted from wishlist")
-                    }
-                }
+        const user = jwt_decode(token)
+        if (!user) {
+            localStorage.removeItem('token')
+            showToast("warning", "", "Kindly Login")
+            navigate('/login')
+            return
+        }
+
+        if (!isWishlisted) {
+            // Add to wishlist
+            let response = await axios.patch(
+                "https://bookztron-server.vercel.app/api/wishlist",
+                { productdetails },
+                { headers: { 'x-access-token': token } }
+            )
+            if (response.data.status === "ok") {
+                setIsWishlisted(true)
+                dispatchUserWishlist({ type: "UPDATE_USER_WISHLIST", payload: response.data.user.wishlist })
+                showToast("success", "", "Item successfully added to wishlist")
             }
-            else
-            {
-                showToast("warning","","Kindly Login")
-            }   
-        }    
+        } else {
+            // Remove from wishlist
+            let response = await axios.delete(
+                `https://bookztron-server.vercel.app/api/wishlist/${_id}`,
+                { headers: { 'x-access-token': token } }
+            )
+            if (response.data.status === "ok") {
+                setIsWishlisted(false)
+                dispatchUserWishlist({ type: "UPDATE_USER_WISHLIST", payload: response.data.user.wishlist })
+                showToast("success", "", "Item successfully deleted from wishlist")
+            }
+        }
     }
     
     return (
-        <Link 
-            to={`/shop/${_id}`}  
-            onClick={() => localStorage.setItem(`${_id}`, JSON.stringify(productdetails))}
-            target="_blank"
-            rel="noopener noreferrer"
+        <motion.div 
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -6 }}
+            transition={{ duration: 0.3, cubicBezier: [0.4, 0, 0.2, 1] }}
+            className="product-card-motion"
         >
-            <div className="card-basic">
-                <img src={imgSrc} alt={imgAlt}/>
-                <div className="card-item-details">
-                    <div className="item-title">
-                        <h4>{bookName}</h4>
-                    </div>
-                    <h5 className="item-author">- By  &nbsp;{author}</h5>
-                    <p><b>Rs. {discountedPrice}   &nbsp;&nbsp;</b><del>Rs. {originalPrice}</del> &nbsp;&nbsp;
-                        <span className="discount-on-card">({discountPercent}% off)</span>
-                    </p>
-                    <div className="card-button">
-                        <button 
-                            onClick={(event)=>{
-                                event.preventDefault();
-                                event.stopPropagation();
-                                addOrRemoveItemToWishlist()
-                            }} 
-                            className={`card-icon-btn ${wishlistBtn} outline-card-secondary-btn`}>
-                                <i className={`fa fa-x ${wishlistHeartIcon}`} aria-hidden="true"></i>
-                        </button>
-                    </div>
-                    <div className="badge-on-card">
-                        {badgeText}
-                    </div>
-                    {
-                        outOfStock && (
-                            <div className="card-text-overlay-container">
-                                    <p>Out of Stock</p>
-                            </div>
-                        )
-                    }
+            <Link 
+                to={`/shop/${_id}`}  
+                onClick={() => localStorage.setItem(`${_id}`, JSON.stringify(productdetails))}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="product-card"
+            >
+                <div className="product-card-media">
+                    <img 
+                        src={imgSrc} 
+                        alt={imgAlt} 
+                    />
+                    
+                    {badgeText && (
+                        <span className="product-card-badge">
+                            {badgeText}
+                        </span>
+                    )}
+
+                    <button 
+                        onClick={addOrRemoveItemToWishlist}
+                        className={`product-card-wishlist action-pop ${wishlistAnimating ? "is-animating" : ""}`}
+                        aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                    >
+                        <Heart size={16} className={isWishlisted ? "wishlisted" : ""} />
+                    </button>
+
+                    {outOfStock && (
+                        <div className="product-card-overlay">
+                            <span>Out of Stock</span>
+                        </div>
+                    )}
                 </div>
-            </div>
-        </Link>
+
+                <div className="product-card-body">
+                    <h4>
+                        {bookName}
+                    </h4>
+                    <span className="product-card-author">
+                        By {author}
+                    </span>
+                    
+                    <div className="product-card-footer">
+                        <div>
+                            <div className="product-card-price-row">
+                                <span className="product-card-price">
+                                    Rs. {discountedPrice}
+                                </span>
+                                <del>
+                                    Rs. {originalPrice}
+                                </del>
+                            </div>
+                            <span className="product-card-discount">
+                                {discountPercent}% OFF
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </Link>
+        </motion.div>
     )
 }
 

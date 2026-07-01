@@ -23,7 +23,6 @@ function HorizontalProductCard({productDetails})
         imgSrc, 
         imgAlt,
         badgeText, 
-        outOfStock, 
         quantity
     } = productDetails;
     const productdetails = productDetails;
@@ -33,6 +32,15 @@ function HorizontalProductCard({productDetails})
     useEffect(()=>{
         (async function onQuantityChange()
         {
+            const token = localStorage.getItem('token')
+            if(!token)
+            {
+                dispatchUserCart({
+                    type: "UPDATE_GUEST_CART_QUANTITY",
+                    payload: { productId: _id, quantity: productQuantity }
+                })
+                return
+            }
             
             let newQuantity = productQuantity
             let quantityUpdateResponse = await axios.patch(
@@ -97,7 +105,8 @@ function HorizontalProductCard({productDetails})
         }
         else
         {
-            showToast("warning","","Kindly Login")
+            dispatchUserCart({type: "REMOVE_GUEST_CART_ITEM", payload: productDetails._id})
+            showToast("success","","Item removed from cart")
         } 
     }
 
@@ -139,7 +148,8 @@ function HorizontalProductCard({productDetails})
         }
         else
         {
-            showToast("warning","","Kindly Login")
+            dispatchUserWishlist({type: "ADD_GUEST_WISHLIST_ITEM", payload: productdetails})
+            showToast("success","","Saved to wishlist")
         } 
     }
 

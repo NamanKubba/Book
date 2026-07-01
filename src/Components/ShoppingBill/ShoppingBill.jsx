@@ -31,6 +31,14 @@ function ShoppingBill()
 
     async function displayRazorPay()
     {
+        const token = localStorage.getItem('token')
+        if(!token)
+        {
+            showToast("warning","","Please login to place your order")
+            navigate('/login')
+            return
+        }
+
         const res = await loadRazorpayScript("https://checkout.razorpay.com/v1/checkout.js")
 
         if(!res)
@@ -54,7 +62,7 @@ function ShoppingBill()
             "key": "rzp_test_hyc3ht0ngvqOD5", 
             "amount": data.amount, 
             "currency": data.currency,
-            "name": "Bookztron",
+            "name": "BookStack",
             "description": "Thank you for shopping!",
             "image": "https://raw.githubusercontent.com/Naman-Saxena1/Bookztron-E-Commerce_Book_Store/development/public/favicon-icon.png",
             "order_id": data.id,

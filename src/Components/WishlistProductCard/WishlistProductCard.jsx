@@ -30,6 +30,8 @@ export default function WishlistProductCard({ productdetails })
     } = productdetails
     const [wishlistHeartIcon, setWishlistHeartIcon] = useState("fa-heart-o")
     const [wishlistBtn, setWishlistBtn]             = useState("add-to-wishlist-btn")
+    const [wishlistAnimating, setWishlistAnimating] = useState(false)
+    const [cartAnimating, setCartAnimating] = useState(false)
 
     useEffect(()=>{
         const index = userWishlist.findIndex(product=> {
@@ -50,6 +52,8 @@ export default function WishlistProductCard({ productdetails })
 
     async function addOrRemoveItemToWishlist()
     {
+        setWishlistAnimating(true)
+        window.setTimeout(() => setWishlistAnimating(false), 560)
         if(wishlistHeartIcon==="fa-heart-o" && wishlistBtn ==="add-to-wishlist-btn")
         {
             //Item not present in wishlist, add it
@@ -91,7 +95,8 @@ export default function WishlistProductCard({ productdetails })
             }
             else
             {
-                showToast("warning","","Kindly Login")
+                dispatchUserWishlist({type: "ADD_GUEST_WISHLIST_ITEM", payload: productdetails})
+                showToast("success","","Saved to wishlist")
             }   
         }
         else
@@ -134,13 +139,16 @@ export default function WishlistProductCard({ productdetails })
             }
             else
             {
-                showToast("warning","","Kindly Login")
+                dispatchUserWishlist({type: "REMOVE_GUEST_WISHLIST_ITEM", payload: productdetails._id})
+                showToast("success","","Removed from wishlist")
             }   
         }    
     }
 
     async function addItemToCart()
     {
+        setCartAnimating(true)
+        window.setTimeout(() => setCartAnimating(false), 560)
         const token=localStorage.getItem('token')
 
         if(token)
@@ -176,7 +184,8 @@ export default function WishlistProductCard({ productdetails })
         }
         else
         {
-            showToast("warning","","Kindly Login")
+            dispatchUserCart({type: "ADD_GUEST_CART_ITEM", payload: productdetails})
+            showToast("success","","Added to cart")
         } 
     }
     
@@ -204,7 +213,7 @@ export default function WishlistProductCard({ productdetails })
                                 event.stopPropagation();
                                 addOrRemoveItemToWishlist()
                             }} 
-                            className={`card-icon-btn ${wishlistBtn} outline-card-secondary-btn`}>
+                            className={`card-icon-btn ${wishlistBtn} outline-card-secondary-btn action-pop ${wishlistAnimating ? "is-animating" : ""}`}>
                                 <i className={`fa fa-x ${wishlistHeartIcon}`} aria-hidden="true"></i>
                         </button>
                     </div>
@@ -220,7 +229,7 @@ export default function WishlistProductCard({ productdetails })
                     }
                 </div>
                 <button 
-                        className="solid-primary-btn add-wishlist-item-to-cart-btn"
+                        className={`solid-primary-btn add-wishlist-item-to-cart-btn action-pop ${cartAnimating ? "is-animating" : ""}`}
                         onClick={event=>{
                             event.preventDefault()
                             event.stopPropagation()

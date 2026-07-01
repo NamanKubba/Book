@@ -26,7 +26,7 @@ function Shop(props) {
     const { pathname } = useLocation();
     const { searchBarTerm } = useSearchBar()
     const [ currentPage, setCurrentPage ] = useState(1)
-    const [ productsPerPage, setProductsPerPage ] = useState(12)
+    const [ productsPerPage ] = useState(12)
   
     useEffect(() => {
       window.scrollTo(0, 0);
@@ -112,33 +112,45 @@ function Shop(props) {
     let currentProductsAvailableList = productsAvailableList.slice(indexOfFirstProduct, indexOfLastProduct)
 
     return (
-        <div>
-            <div className='shop-container'>
-                <Sidebar/>
-                <div className='products-container'>
-                    <h2>Showing {searchBarTerm === ""?productsAvailableList.length:searchedProducts.length} products</h2>
-                    <div className="products-card-grid">
-                        {
-                            productsAvailableList && 
-                            (
-                              searchBarTerm === "" ?
-                              (
-                                currentProductsAvailableList.map(productdetails => (
-                                  <ProductCard key={productdetails._id} productdetails={productdetails} />
-                                ))
-                              ) : (
-                                currentSearchedProducts.map(productdetails => (
-                                  <ProductCard key={productdetails._id} productdetails={productdetails} />
-                                ))
-                              )
-                            )
-                        }
+        <div className="shop-page">
+            <div className="page-shell shop-shell">
+                <div className="shop-layout">
+                    <div className="shop-sidebar">
+                        <Sidebar />
                     </div>
-                    <Pagination 
-                      productsPerPage={productsPerPage} 
-                      totalProducts={searchBarTerm === ""?productsAvailableList.length:searchedProducts.length}
-                      paginate={setCurrentPage}
-                    />
+                    
+                    <main className="shop-content">
+                        <div className="shop-toolbar">
+                            <p>Book catalog</p>
+                            <h2>Showing {searchBarTerm === "" ? productsAvailableList.length : searchedProducts.length} books</h2>
+                        </div>
+                        
+                        <div className="products-card-grid">
+                            {
+                                productsAvailableList && 
+                                (
+                                  searchBarTerm === "" ?
+                                  (
+                                    currentProductsAvailableList.map(productdetails => (
+                                      <ProductCard key={productdetails._id} productdetails={productdetails} />
+                                    ))
+                                  ) : (
+                                    currentSearchedProducts.map(productdetails => (
+                                      <ProductCard key={productdetails._id} productdetails={productdetails} />
+                                    ))
+                                  )
+                                )
+                            }
+                        </div>
+                        
+                        <div className="shop-pagination">
+                            <Pagination 
+                              productsPerPage={productsPerPage} 
+                              totalProducts={searchBarTerm === "" ? productsAvailableList.length : searchedProducts.length}
+                              paginate={setCurrentPage}
+                            />
+                        </div>
+                    </main>
                 </div>
             </div>
         </div>

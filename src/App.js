@@ -1,6 +1,4 @@
 import './App.css';
-import { useEffect, useLayoutEffect } from 'react';
-import axios from "axios"
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import { 
   Navbar, 
@@ -13,18 +11,9 @@ import {
   Wishlist,
   Cart,
   Orders,
-  useUserLogin,
-  useWishlist,
-  useCart
 } from "./index"
 
 function App() {
-
-  const { userLoggedIn } = useUserLogin()
-  const { dispatchUserWishlist } = useWishlist()
-  const { dispatchUserCart } = useCart()
-
-
   return (
     <Router>
       <div className="App">

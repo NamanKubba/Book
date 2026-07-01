@@ -1,27 +1,18 @@
 import "./ProductOrderCard.css"
-import { useState } from "react"
 import axios from "axios";
-import jwt_decode from "jwt-decode";
-import { useNavigate } from "react-router-dom"
-import { useToast, useOrders } from "../../index"
+import { useOrders } from "../../index"
 
 function ProductOrderCard({productDetails})
 {
     const { dispatchUserOrders } = useOrders()
-    const navigate = useNavigate()
 
-    const { showToast } = useToast()
     const {
         _id, 
         bookName,
         author,
-        originalPrice,
-        discountedPrice,
-        discountPercent,
         imgSrc, 
         imgAlt,
         badgeText, 
-        outOfStock, 
         quantity,
         orderId
     } = productDetails;

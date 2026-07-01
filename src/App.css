@@ -1,68 +1,168 @@
-@import url('https://enztron-temp-deployed-branch.netlify.app/components.css');
-@import url('https://fonts.googleapis.com/css?family=Comfortaa');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
-:root
-{
-    --dark-grey     : #2F4858;
-    --dark-grey-2   : #282c34;
-    --royal-blue    : #29517C;
-    --sky-blue      : #0e7490;
-    --bluish-white  : #F5F7F9;
-    --pure-white    : white;
-    --red-color     : #ca0e1d;
-    --background-color-dull-yellow: #e0e0d4;
-    --yellow-background-color     : #efe6e1;
-    --dull-grey     : #8f8f8f;
+:root {
+    --primary: #155e75;
+    --primary-hover: #164e63;
+    --primary-soft: #e0f2fe;
+    --secondary: #be123c;
+    --accent: #f59e0b;
+    --success: #15803d;
+    --danger: #dc2626;
+    --background: #f7f8f3;
+    --surface: #ffffff;
+    --surface-muted: #f1f5f9;
+    --surface-glass: rgba(255, 255, 255, 0.86);
+    --border: #dde5df;
+    --border-strong: #b7c5bd;
+
+    --text-primary: #12201c;
+    --text-secondary: #52615c;
+    --text-light: #83918c;
+
+    --red-color: var(--danger);
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 22px;
+    --shadow-sm: 0 1px 2px rgb(18 32 28 / 0.06);
+    --shadow-md: 0 12px 30px rgb(18 32 28 / 0.09);
+    --shadow-lg: 0 24px 60px rgb(18 32 28 / 0.14);
+
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --transition-all: all 0.22s ease;
 }
 
-html
-{
-    font-family: 'Comfortaa', cursive;
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-sans);
+    background-color: var(--background);
+    color: var(--text-primary);
+    scroll-behavior: smooth;
+    min-height: 100vh;
 }
 
-body
-{
-    font-family: 'Comfortaa', cursive;
+* {
+    box-sizing: border-box;
 }
 
-html, body
-{
-    height: auto;
-    background-color: white;
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
 }
 
 .App {
-    min-height: 100%;
-    text-align: center;
-    background-color: white;
-    font-family: 'Comfortaa', cursive;
+    min-height: 100vh;
+    background:
+        linear-gradient(180deg, rgba(224, 242, 254, 0.5), transparent 360px),
+        var(--background);
+    font-family: var(--font-sans);
 }
 
-*::-webkit-scrollbar 
-{
-    height: 1em;
+/* Premium Scrollbars */
+*::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
 }
   
-*::-webkit-scrollbar-track 
-{
-    background: var(--light-grey);
+*::-webkit-scrollbar-track {
+    background: transparent;
 }
   
-*::-webkit-scrollbar-thumb 
-{
-    background: var(--sky-blue);
+*::-webkit-scrollbar-thumb {
+    background: var(--text-light);
+    border-radius: 4px;
 }
 
-a::after
-{
-    content: '';
-    display: block;
-    width: 0px;
-    height: 0px;
-    background: var(--dark-blue-color);
+*::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
 }
 
-a:hover::after
-{
-    width: 0;
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--transition-all);
+}
+
+a::after {
+    display: none;
+}
+
+.page-shell {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+}
+
+.primary-action,
+.secondary-action {
+    min-height: 44px;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    padding: 0.75rem 1.1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 800;
+}
+
+.primary-action {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 12px 24px rgb(21 94 117 / 0.2);
+}
+
+.primary-action:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.secondary-action {
+    background: white;
+    color: var(--primary);
+    border-color: var(--border);
+}
+
+.action-pop {
+    position: relative;
+    overflow: hidden;
+}
+
+.action-pop.is-animating {
+    animation: actionPulse 520ms ease;
+}
+
+.action-pop.is-animating::after {
+    content: "";
+    position: absolute;
+    inset: 50%;
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.72);
+    transform: translate(-50%, -50%);
+    animation: actionRipple 520ms ease-out;
+    pointer-events: none;
+}
+
+@keyframes actionPulse {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.06); }
+    100% { transform: scale(1); }
+}
+
+@keyframes actionRipple {
+    0% { opacity: 0.75; width: 10px; height: 10px; }
+    100% { opacity: 0; width: 170px; height: 170px; }
+}
+
+@media (max-width: 640px) {
+    .page-shell {
+        width: min(100% - 28px, 1180px);
+    }
 }
