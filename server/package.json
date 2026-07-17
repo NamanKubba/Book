@@ -1,0 +1,12 @@
+{
+  "name": "bookstack-otp-server",
+  "version": "1.0.0",
+  "description": "OTP email server for BookStack",
+  "main": "otp-server.js",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^4.17.3",
+    "nodemailer": "^9.0.3"
+  }
+}
